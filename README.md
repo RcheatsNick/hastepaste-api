@@ -1,2 +1,1 @@
-# api
-📦 HastePaste app API service
+# 📦 HastePaste App API Service
