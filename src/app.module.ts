@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { RateLimiterModule, RateLimiterGuard } from "nestjs-rate-limit";
 import { HealthModule } from "./routers/health/health.module";
 import { PingModule } from "./routers/ping/ping.module";
+import { AuthModule } from "./routers/auth/auth.module";
 import CONFIG from "./config";
 
 @Module({
@@ -17,7 +18,6 @@ import CONFIG from "./config";
         TypeOrmModule.forRoot({
             type: "mongodb",
             url: CONFIG.MONGODB_URI,
-            database: "HastePaste",
             synchronize: true,
             logger: "debug",
             useUnifiedTopology: true,
@@ -25,7 +25,8 @@ import CONFIG from "./config";
             autoLoadEntities: true,
         }),
         HealthModule,
-        PingModule
+        PingModule,
+        AuthModule
     ],
     controllers: [AppController],
     providers: [{ provide: APP_GUARD, useClass: RateLimiterGuard }],

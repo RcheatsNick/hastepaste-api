@@ -5,4 +5,13 @@ declare module "api-types" {
         data: T;
         error?: string;
     }
+    export interface AccessTokenData {
+        access_token: string;
+        expiresIn: number;
+    }
+    export interface PatchResult {
+        id: string;
+        mail?: string;
+        password?: string;
+    }
 }
