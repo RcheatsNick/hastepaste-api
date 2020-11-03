@@ -1,0 +1,6 @@
+[submodule "src/libs/snowflake"]
+	path = src/libs/snowflake
+	url = https://github.com/HastePasteApp/snowflake
+[submodule "src/libs/crypto"]
+	path = src/libs/crypto
+	url = https://github.com/HastePasteApp/crypto
