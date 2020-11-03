@@ -6,7 +6,7 @@ import {
     UnauthorizedException,
 } from "@nestjs/common";
 import * as Jwt from "jsonwebtoken";
-import CONFIG from "src/config";
+import CONFIG from "../../config";
 import { AuthService } from "./auth.service";
 
 @Injectable()

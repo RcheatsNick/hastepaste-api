@@ -8,14 +8,13 @@ import {
 import { MongoRepository } from "typeorm";
 import { AccessTokenData, APIRes, PatchResult } from "api-types";
 import * as Jwt from "jsonwebtoken";
-import config from "src/config";
 import { LoginSignupDTO } from "./dto/login-signup.dto";
 import { PatchDTO } from "./dto/patch.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./user.entity";
-import { Crypto } from "src/libs/crypto/src";
-import { Snowflake } from "src/libs/snowflake/src";
-import CONFIG from "src/config";
+import { Crypto } from "../../libs/crypto";
+import { Snowflake } from "../../libs/snowflake";
+import CONFIG from "../../config";
 
 @Injectable()
 export class AuthService {
@@ -94,7 +93,7 @@ export class AuthService {
         payload: { id: string; mail: string },
         expiresIn: number = 30 * 24 * 60 * 60 * 1000,
     ): { access_token: string; expiresIn: number } {
-        const access_token = Jwt.sign(payload, config.SECRET, {
+        const access_token = Jwt.sign(payload, CONFIG.SECRET, {
             algorithm: "HS512",
             expiresIn,
         });

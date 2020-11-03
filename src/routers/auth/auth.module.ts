@@ -3,8 +3,8 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "./user.entity";
-import { Crypto } from "src/libs/crypto/src";
-import { Snowflake } from "src/libs/snowflake/src";
+import { Crypto } from "../../libs/crypto";
+import { Snowflake } from "../../libs/snowflake";
 
 @Module({
     imports: [TypeOrmModule.forFeature([UserEntity])],
