@@ -26,7 +26,7 @@ import CONFIG from "./config";
         }),
         HealthModule,
         PingModule,
-        AuthModule
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [{ provide: APP_GUARD, useClass: RateLimiterGuard }],

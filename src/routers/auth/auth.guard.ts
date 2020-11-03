@@ -5,6 +5,7 @@ import {
     BadRequestException,
     UnauthorizedException,
 } from "@nestjs/common";
+import { IUser } from "api-types";
 import * as Jwt from "jsonwebtoken";
 import CONFIG from "../../config";
 import { AuthService } from "./auth.service";
@@ -12,22 +13,18 @@ import { AuthService } from "./auth.service";
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(private authService: AuthService) {}
-    async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    public async canActivate(ctx: ExecutionContext): Promise<boolean> {
         const req = ctx.switchToHttp().getRequest();
         const token: string =
             req.headers["authorization"] || req.headers["x-access-token"];
         if (!token) throw new BadRequestException("invalid access token");
-        await Jwt.verify(
-            token,
-            CONFIG.SECRET,
-            async (err, decoded: { mail: string; id: string }) => {
-                if (err) throw new BadRequestException("invalid access token");
-                const isExist = await this.authService.isExists(decoded.id);
-                if (!isExist) throw new UnauthorizedException("user not found");
-                req.user = decoded;
-                return true;
-            },
-        );
+        await Jwt.verify(token, CONFIG.SECRET, async (err, decoded: IUser) => {
+            if (err) throw new BadRequestException("invalid access token");
+            const isExist = await this.authService.isExists(decoded.id);
+            if (!isExist) throw new UnauthorizedException("user not found");
+            req.user = decoded;
+            return true;
+        });
         return true;
     }
 }

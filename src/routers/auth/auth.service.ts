@@ -6,10 +6,17 @@ import {
     HttpStatus,
 } from "@nestjs/common";
 import { MongoRepository } from "typeorm";
-import { AccessTokenData, APIRes, PatchResult } from "api-types";
+import {
+    AccessTokenData,
+    APIRes,
+    IUser,
+    PatchResult,
+    VerificationResult,
+} from "api-types";
 import * as Jwt from "jsonwebtoken";
 import { LoginSignupDTO } from "./dto/login-signup.dto";
 import { PatchDTO } from "./dto/patch.dto";
+import { VerifyEMailDTO } from "./dto/verify-email.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./user.entity";
 import { Crypto } from "../../libs/crypto";
@@ -25,7 +32,7 @@ export class AuthService {
         private readonly cryptoService: Crypto,
     ) {}
 
-    replyPing(): APIRes<null> {
+    public replyPing(): APIRes<null> {
         return {
             statusCode: HttpStatus.OK,
             message: "Pong!",
@@ -33,7 +40,7 @@ export class AuthService {
         };
     }
 
-    async signup({
+    public async signup({
         mail,
         password,
     }: LoginSignupDTO): Promise<APIRes<AccessTokenData>> {
@@ -61,7 +68,7 @@ export class AuthService {
         };
     }
 
-    async login({
+    public async login({
         mail,
         password,
     }: LoginSignupDTO): Promise<APIRes<AccessTokenData>> {
@@ -79,18 +86,18 @@ export class AuthService {
         };
     }
 
-    async isUnique(mail: string): Promise<boolean> {
+    private async isUnique(mail: string): Promise<boolean> {
         const matchUsers = await this.userRepository.find({ mail });
         return matchUsers.length == 0;
     }
 
-    async isExists(id: string): Promise<boolean> {
+    public async isExists(id: string): Promise<boolean> {
         const user = await this.userRepository.findOne({ id });
         return !!user;
     }
 
-    generateToken(
-        payload: { id: string; mail: string },
+    private generateToken(
+        payload: IUser,
         expiresIn: number = 30 * 24 * 60 * 60 * 1000,
     ): { access_token: string; expiresIn: number } {
         const access_token = Jwt.sign(payload, CONFIG.SECRET, {
@@ -103,7 +110,10 @@ export class AuthService {
         };
     }
 
-    async getUser({ mail, password }: LoginSignupDTO): Promise<UserEntity> {
+    public async getUser({
+        mail,
+        password,
+    }: LoginSignupDTO): Promise<UserEntity> {
         const user = await this.userRepository.findOne({ mail });
         if (
             !user ||
@@ -113,10 +123,10 @@ export class AuthService {
         return user;
     }
 
-    async getToken({
+    public async getToken({
         mail,
         password,
-    }: LoginSignupDTO): Promise<{ access_token: string; expiresIn: number }> {
+    }: LoginSignupDTO): Promise<AccessTokenData> {
         const user = await this.getUser({ mail, password });
         const { access_token, expiresIn } = this.generateToken({
             id: user.id,
@@ -125,7 +135,7 @@ export class AuthService {
         return { access_token, expiresIn };
     }
 
-    async delete(id: string): Promise<APIRes<null>> {
+    public async delete(id: string): Promise<APIRes<null>> {
         await this.userRepository.findOneAndDelete({ id });
         return {
             statusCode: HttpStatus.OK,
@@ -134,9 +144,9 @@ export class AuthService {
         };
     }
 
-    async patchUser(
+    public async patchUser(
         { mail, password }: PatchDTO,
-        user: { mail: string; id: string },
+        user: IUser,
     ): Promise<APIRes<PatchResult>> {
         const exist = this.isExists(user.id);
         if (!exist) throw new NotFoundException("User not found");
@@ -149,7 +159,10 @@ export class AuthService {
                 CONFIG.SECRET,
                 password,
             );
-        await this.userRepository.updateOne({ id: user.id }, updateData);
+        await this.userRepository.updateOne(
+            { id: user.id },
+            { $set: updateData },
+        );
         return {
             statusCode: HttpStatus.OK,
             message: "User updated",
@@ -158,5 +171,71 @@ export class AuthService {
                 ...updateData,
             },
         };
+    }
+
+    private async isVerified(id: string): Promise<boolean> {
+        const user = await this.userRepository.findOne({ id });
+        if (!user || !user.mail_verified) return false;
+        return true;
+    }
+
+    public async generateEMailVerificationKey(
+        user: IUser,
+    ): Promise<APIRes<AccessTokenData>> {
+        const isExists = await this.isExists(user.id);
+        if (!isExists) throw new BadRequestException("Account not found");
+        const isVerified = await this.isVerified(user.id);
+        if (isVerified) throw new ConflictException("Account already verified");
+        const expiresIn = 30 * 24 * 60 * 60 * 1000;
+        const access_token = Jwt.sign(
+            {
+                id: user.id,
+                mail: user.mail,
+            },
+            CONFIG.SECRET,
+            {
+                algorithm: "HS512",
+                expiresIn,
+            },
+        );
+        return {
+            statusCode: HttpStatus.OK,
+            message: "E-Mail verification key successfully generated",
+            data: {
+                access_token,
+                expiresIn,
+            },
+        };
+    }
+
+    public async verifyEmail({
+        verification_key,
+    }: VerifyEMailDTO): Promise<APIRes<VerificationResult>> {
+        const res = ((await Jwt.verify(
+            verification_key,
+            CONFIG.SECRET,
+            async (err, decoded: IUser) => {
+                if (err)
+                    throw new BadRequestException("Invalid verification key");
+                const isExists = await this.isExists(decoded.id);
+                if (!isExists)
+                    throw new BadRequestException("Account not found");
+                const isVerified = await this.isVerified(decoded.id);
+                if (isVerified)
+                    throw new ConflictException("Account already verified");
+                await this.userRepository.updateOne(
+                    { id: decoded.id },
+                    { $set: { mail_verified: true } },
+                );
+                return {
+                    statusCode: HttpStatus.ACCEPTED,
+                    message: "Account verified successfully",
+                    data: {
+                        verified: true,
+                    },
+                };
+            },
+        )) as unknown) as APIRes<VerificationResult>;
+        return res;
     }
 }

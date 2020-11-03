@@ -10,25 +10,25 @@ import {
 @Entity({ name: "UserEntity" })
 export class UserEntity {
     @ObjectIdColumn()
-    _id: ObjectID;
+    public _id: ObjectID;
 
     @Column({ nullable: false, unique: true })
-    id: string;
+    public id: string;
 
     @Column({ nullable: false, unique: true })
-    mail: string;
+    public mail: string;
 
     @Column()
-    mail_verified?: boolean;
+    public mail_verified: boolean;
 
     @Column({ nullable: false })
-    password: string;
+    public password: string;
 
     @CreateDateColumn({ type: "timestamp" })
-    createdAt: number;
+    public createdAt: number;
 
     @UpdateDateColumn({ type: "timestamp" })
-    updateAt: number;
+    public updateAt: number;
 
     constructor(partial: Partial<UserEntity>) {
         Object.assign(this, partial);

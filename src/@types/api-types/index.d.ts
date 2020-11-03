@@ -14,4 +14,11 @@ declare module "api-types" {
         mail?: string;
         password?: string;
     }
+    export interface IUser {
+        mail: string;
+        id: string;
+    }
+    export interface VerificationResult {
+        verified: boolean;
+    }
 }
