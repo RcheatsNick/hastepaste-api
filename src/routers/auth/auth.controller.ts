@@ -63,7 +63,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     public async generateEMailVerificationKey(
         @User() user: IUser,
-    ): Promise<APIRes<AccessTokenData>> {
+    ): Promise<APIRes<null>> {
         return this.authService.generateEMailVerificationKey(user);
     }
 

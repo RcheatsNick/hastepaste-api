@@ -19,6 +19,7 @@ declare module "api-types" {
         id: string;
         is_admin: boolean;
         is_banned: boolean;
+        mail_verified: boolean;
     }
     export interface VerificationResult {
         verified: boolean;

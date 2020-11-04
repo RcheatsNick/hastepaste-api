@@ -21,10 +21,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./user.entity";
 import { Crypto } from "../../libs/crypto";
 import { Snowflake } from "../../libs/snowflake";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import CONFIG from "../../config";
 
 @Injectable()
 export class AuthService {
+    private readonly verificationTemplate = readFileSync(`${resolve("src")}/templates/verification.html`, "utf-8");
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: MongoRepository<UserEntity>,
@@ -59,6 +62,7 @@ export class AuthService {
             mail,
             is_admin: user.is_admin,
             is_banned: user.is_banned,
+            mail_verified: user.mail_verified
         });
         return {
             statusCode: HttpStatus.CREATED,
@@ -135,6 +139,7 @@ export class AuthService {
             mail,
             is_admin: user.is_admin,
             is_banned: user.is_banned,
+            mail_verified: user.mail_verified
         });
         return { access_token, expiresIn };
     }
@@ -183,15 +188,30 @@ export class AuthService {
         return true;
     }
 
+    private async sendVerificationMail(mail: string, verification_key: string): Promise<boolean> {
+        return new Promise((resolve) => {
+            CONFIG.MAIL.SYSTEM.sendMail({
+                from: `HastePaste System`,
+                to : mail,
+                subject : "HastePaste E-Mail Verification",
+                text: "Please Verify Your HastePaste E-Mail",
+                html : this.verificationTemplate.replace("{{{verification_key}}}", verification_key) 
+            }, (err) => {
+                if (err) resolve(false);
+                resolve(true)
+            })
+        });
+    }
+
     public async generateEMailVerificationKey(
         user: IUser,
-    ): Promise<APIRes<AccessTokenData>> {
+    ): Promise<APIRes<null>> {
         const isExists = await this.isExists(user.id);
         if (!isExists) throw new BadRequestException("Account not found");
         const isVerified = await this.isVerified(user.id);
         if (isVerified) throw new ConflictException("Account already verified");
         const expiresIn = 30 * 24 * 60 * 60 * 1000;
-        const access_token = Jwt.sign(
+        const verification_key = Jwt.sign(
             {
                 id: user.id,
                 mail: user.mail,
@@ -202,13 +222,12 @@ export class AuthService {
                 expiresIn,
             },
         );
+        const isEmailSent = await this.sendVerificationMail(user.mail, verification_key);
+        if (!isEmailSent) throw new BadRequestException("Can not send e-mail to this mail address");
         return {
             statusCode: HttpStatus.OK,
-            message: "E-Mail verification key successfully generated",
-            data: {
-                access_token,
-                expiresIn,
-            },
+            message: "Verification e-mail successfully sent",
+            data: null,
         };
     }
 
