@@ -27,6 +27,9 @@ export class UserEntity {
     @Column()
     public is_banned: boolean;
 
+    @Column()
+    public ban_reason: string;
+
     @Column({ nullable: false })
     public password: string;
 

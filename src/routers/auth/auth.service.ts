@@ -4,6 +4,7 @@ import {
     BadRequestException,
     NotFoundException,
     HttpStatus,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { MongoRepository } from "typeorm";
 import { AccessTokenData, APIRes, IUser, PatchResult } from "api-types";
@@ -134,7 +135,17 @@ export class AuthService {
         return { access_token, expiresIn };
     }
 
+    public async isBanned(id: string): Promise<boolean> {
+        const user = await this.userRepository.findOne({ id });
+        return user && user.is_banned;
+    }
+
     public async delete(id: string): Promise<APIRes<null>> {
+        const exist = this.isExists(id);
+        if (!exist) throw new NotFoundException("User not found");
+        const isBanned = await this.isBanned(id);
+        if (isBanned)
+            throw new UnauthorizedException("This account has been banned");
         await this.userRepository.findOneAndDelete({ id });
         return {
             statusCode: HttpStatus.OK,
@@ -149,6 +160,9 @@ export class AuthService {
     ): Promise<APIRes<PatchResult>> {
         const exist = this.isExists(user.id);
         if (!exist) throw new NotFoundException("User not found");
+        const isBanned = await this.isBanned(user.id);
+        if (isBanned)
+            throw new UnauthorizedException("This account has been banned");
         if (!mail && !password)
             throw new BadRequestException("Mail or password required");
         const updateData = {};
