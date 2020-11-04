@@ -59,7 +59,7 @@ export class AuthController {
         return await this.authService.patchUser(patchDTO, user);
     }
 
-    @Get("generate_verificitaion_key")
+    @Get("verify")
     @UseGuards(AuthGuard)
     public async generateEMailVerificationKey(
         @User() user: IUser,
@@ -74,7 +74,7 @@ export class AuthController {
         return this.authService.verifyEmail(verifyEMailDTO);
     }
 
-    @Get("access_token_test")
+    @Get("test")
     @UseGuards(AuthGuard)
     public testAccessToken(): APIRes<null> {
         return this.authService.replyPing();

@@ -57,6 +57,8 @@ export class AuthService {
         const { access_token, expiresIn } = this.generateToken({
             id,
             mail,
+            is_admin: user.is_admin,
+            is_banned: user.is_banned,
         });
         return {
             statusCode: HttpStatus.CREATED,
@@ -131,6 +133,8 @@ export class AuthService {
         const { access_token, expiresIn } = this.generateToken({
             id: user.id,
             mail,
+            is_admin: user.is_admin,
+            is_banned: user.is_banned,
         });
         return { access_token, expiresIn };
     }

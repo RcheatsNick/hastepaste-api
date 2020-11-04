@@ -6,6 +6,7 @@ import { RateLimiterModule, RateLimiterGuard } from "nestjs-rate-limit";
 import { HealthModule } from "./routers/health/health.module";
 import { PingModule } from "./routers/ping/ping.module";
 import { AuthModule } from "./routers/auth/auth.module";
+import { AdminModule } from "./routers/admin/admin.module";
 import CONFIG from "./config";
 
 @Module({
@@ -27,6 +28,7 @@ import CONFIG from "./config";
         HealthModule,
         PingModule,
         AuthModule,
+        AdminModule,
     ],
     controllers: [AppController],
     providers: [{ provide: APP_GUARD, useClass: RateLimiterGuard }],

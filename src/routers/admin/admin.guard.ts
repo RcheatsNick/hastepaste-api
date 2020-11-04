@@ -8,12 +8,14 @@ import {
 import { IUser } from "api-types";
 import * as Jwt from "jsonwebtoken";
 import CONFIG from "../../config";
-import { AuthService } from "./auth.service";
+import { AuthService } from "../auth/auth.service";
+import { AdminService } from "./admin.service";
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly adminService: AdminService
     ) {}
     public async canActivate(ctx: ExecutionContext): Promise<boolean> {
         const req = ctx.switchToHttp().getRequest();
@@ -24,6 +26,8 @@ export class AuthGuard implements CanActivate {
             if (err) throw new BadRequestException("invalid access token");
             const isExist = await this.authService.isExists(decoded.id);
             if (!isExist) throw new UnauthorizedException("user not found");
+            const isAdmin = await this.adminService.isAdmin(decoded.id);
+            if (!isAdmin) throw new UnauthorizedException("this user is not an admin");
             req.user = decoded;
             return true;
         });

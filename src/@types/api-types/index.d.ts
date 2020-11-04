@@ -17,6 +17,8 @@ declare module "api-types" {
     export interface IUser {
         mail: string;
         id: string;
+        is_admin: boolean;
+        is_banned: boolean;
     }
     export interface VerificationResult {
         verified: boolean;

@@ -21,6 +21,12 @@ export class UserEntity {
     @Column()
     public mail_verified: boolean;
 
+    @Column({ nullable: false, default: false })
+    public is_admin: boolean;
+
+    @Column()
+    public is_banned: boolean;
+
     @Column({ nullable: false })
     public password: string;
 
