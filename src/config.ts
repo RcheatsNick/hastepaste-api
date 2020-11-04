@@ -8,42 +8,58 @@ const CONFIG = {
     MONGODB_URI: process.env.MONGODB_URI as string,
     SECRET: process.env.SECRET as string,
     MAIL: {
-        SYSTEM: nodemailer.createTransport({
-            host: "smtp.yandex.ru",
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.SYSTEM_MAIL as string,
-                pass: process.env.SYSTEM_PASSWORD as string,
-            },
-        }),
-        CONTACT: nodemailer.createTransport({
-            host: "smtp.yandex.ru",
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.CONTACT_MAIL as string,
-                pass: process.env.CONTACT_PASSWORD as string,
-            },
-        }),
-        BUG: nodemailer.createTransport({
-            host: "smtp.yandex.ru",
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.BUG_MAIL as string,
-                pass: process.env.BUG_PASSWORD as string,
-            },
-        }),
-        ABUSE: nodemailer.createTransport({
-            host: "smtp.yandex.ru",
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.ABUSE_MAIL as string,
-                pass: process.env.ABUSE_PASSWORD as string,
-            },
-        }),
+        SYSTEM: {
+            MAIL: process.env.SYSTEM_MAIL as string,
+            PASSWORD: process.env.SYSTEM_PASSWORD as string,
+            TRANSPORT: nodemailer.createTransport({
+                host: "smtp.yandex.ru",
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.SYSTEM_MAIL as string,
+                    pass: process.env.SYSTEM_PASSWORD as string,
+                },
+            }),
+        },
+        CONTACT: {
+            MAIL: process.env.CONTACT_MAIL as string,
+            PASSWORD: process.env.CONTACT_PASSWORD as string,
+            TRANSPORT: nodemailer.createTransport({
+                host: "smtp.yandex.ru",
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.CONTACT_MAIL as string,
+                    pass: process.env.CONTACT_PASSWORD as string,
+                },
+            }),
+        },
+        BUG: {
+            MAIL: process.env.BUG_MAIL as string,
+            PASSWORD: process.env.BUG_PASSWORD as string,
+            TRANSPORT: nodemailer.createTransport({
+                host: "smtp.yandex.ru",
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.BUG_MAIL as string,
+                    pass: process.env.BUG_PASSWORD as string,
+                },
+            }),
+        },
+        ABUSE: {
+            MAIL: process.env.ABUSE_MAIL as string,
+            PASSWORD: process.env.ABUSE_PASSWORD as string,
+            TRANSPORT: nodemailer.createTransport({
+                host: "smtp.yandex.ru",
+                port: 465,
+                secure: true,
+                auth: {
+                    user: process.env.ABUSE_MAIL as string,
+                    pass: process.env.ABUSE_PASSWORD as string,
+                },
+            }),
+        },
     },
 };
 

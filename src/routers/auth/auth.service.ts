@@ -93,6 +93,11 @@ export class AuthService {
         return !!user;
     }
 
+    public async getUserByID(id: string): Promise<UserEntity> {
+        const user = await this.userRepository.findOne({ id });
+        return user;
+    }
+
     private generateToken(
         payload: IUser,
         expiresIn: number = 30 * 24 * 60 * 60 * 1000,

@@ -46,9 +46,9 @@ export class MailService {
         verification_key: string,
     ): Promise<boolean> {
         return new Promise(resolve => {
-            CONFIG.MAIL.SYSTEM.sendMail(
+            CONFIG.MAIL.SYSTEM.TRANSPORT.sendMail(
                 {
-                    from: `HastePaste System`,
+                    from: `HastePaste System <${CONFIG.MAIL.SYSTEM.MAIL}>`,
                     to: mail,
                     subject: "HastePaste E-Mail Verification",
                     text: "Please Verify Your HastePaste E-Mail",

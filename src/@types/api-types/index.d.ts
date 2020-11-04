@@ -24,5 +24,5 @@ declare module "api-types" {
     export interface VerificationResult {
         verified: boolean;
     }
-    export type BanListResult = { id: string; reason: string }[];
+    export type BanListResult = { id: string; reason: string; mail: string }[];
 }
