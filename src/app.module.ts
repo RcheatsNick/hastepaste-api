@@ -7,6 +7,7 @@ import { HealthModule } from "./routers/health/health.module";
 import { PingModule } from "./routers/ping/ping.module";
 import { AuthModule } from "./routers/auth/auth.module";
 import { AdminModule } from "./routers/admin/admin.module";
+import { MailModule } from "./routers/mail/mail.module";
 import CONFIG from "./config";
 
 @Module({
@@ -29,6 +30,7 @@ import CONFIG from "./config";
         PingModule,
         AuthModule,
         AdminModule,
+        MailModule,
     ],
     controllers: [AppController],
     providers: [{ provide: APP_GUARD, useClass: RateLimiterGuard }],

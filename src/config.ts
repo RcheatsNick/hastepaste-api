@@ -14,7 +14,7 @@ const CONFIG = {
             secure: true,
             auth: {
                 user: process.env.SYSTEM_MAIL as string,
-                pass: process.env.SYSTEM_PASSWORD as string
+                pass: process.env.SYSTEM_PASSWORD as string,
             },
         }),
         CONTACT: nodemailer.createTransport({
@@ -23,7 +23,7 @@ const CONFIG = {
             secure: true,
             auth: {
                 user: process.env.CONTACT_MAIL as string,
-                pass: process.env.CONTACT_PASSWORD as string
+                pass: process.env.CONTACT_PASSWORD as string,
             },
         }),
         BUG: nodemailer.createTransport({
@@ -32,7 +32,7 @@ const CONFIG = {
             secure: true,
             auth: {
                 user: process.env.BUG_MAIL as string,
-                pass: process.env.BUG_PASSWORD as string
+                pass: process.env.BUG_PASSWORD as string,
             },
         }),
         ABUSE: nodemailer.createTransport({
@@ -41,10 +41,10 @@ const CONFIG = {
             secure: true,
             auth: {
                 user: process.env.ABUSE_MAIL as string,
-                pass: process.env.ABUSE_PASSWORD as string
+                pass: process.env.ABUSE_PASSWORD as string,
             },
-        })
-    }
+        }),
+    },
 };
 
 export default CONFIG;

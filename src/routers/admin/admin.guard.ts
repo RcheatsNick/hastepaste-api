@@ -15,7 +15,7 @@ import { AdminService } from "./admin.service";
 export class AdminGuard implements CanActivate {
     constructor(
         private readonly authService: AuthService,
-        private readonly adminService: AdminService
+        private readonly adminService: AdminService,
     ) {}
     public async canActivate(ctx: ExecutionContext): Promise<boolean> {
         const req = ctx.switchToHttp().getRequest();
@@ -27,7 +27,8 @@ export class AdminGuard implements CanActivate {
             const isExist = await this.authService.isExists(decoded.id);
             if (!isExist) throw new UnauthorizedException("user not found");
             const isAdmin = await this.adminService.isAdmin(decoded.id);
-            if (!isAdmin) throw new UnauthorizedException("this user is not an admin");
+            if (!isAdmin)
+                throw new UnauthorizedException("this user is not an admin");
             req.user = decoded;
             return true;
         });

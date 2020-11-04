@@ -8,18 +8,11 @@ import {
     Patch,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import {
-    AccessTokenData,
-    APIRes,
-    IUser,
-    PatchResult,
-    VerificationResult,
-} from "api-types";
+import { AccessTokenData, APIRes, IUser, PatchResult } from "api-types";
 import { LoginSignupDTO } from "./dto/login-signup.dto";
 import { PatchDTO } from "./dto/patch.dto";
 import { AuthGuard } from "./auth.guard";
 import { User } from "./user.decorator";
-import { VerifyEMailDTO } from "./dto/verify-email.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -57,21 +50,6 @@ export class AuthController {
         @Body() patchDTO: PatchDTO,
     ): Promise<APIRes<PatchResult>> {
         return await this.authService.patchUser(patchDTO, user);
-    }
-
-    @Get("verify")
-    @UseGuards(AuthGuard)
-    public async generateEMailVerificationKey(
-        @User() user: IUser,
-    ): Promise<APIRes<null>> {
-        return this.authService.generateEMailVerificationKey(user);
-    }
-
-    @Post("verify")
-    public async verifyEmail(
-        @Body() verifyEMailDTO: VerifyEMailDTO,
-    ): Promise<APIRes<VerificationResult>> {
-        return this.authService.verifyEmail(verifyEMailDTO);
     }
 
     @Get("test")
