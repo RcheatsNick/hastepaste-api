@@ -6,21 +6,16 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { APIRes, IUser, VerificationResult } from "api-types";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 import { MongoRepository } from "typeorm";
 import { UserEntity } from "../auth/user.entity";
 import { VerifyEMailDTO } from "./dto/verify-email.dto";
 import { AuthService } from "../auth/auth.service";
-import CONFIG from "../../config";
 import * as Jwt from "jsonwebtoken";
+import CONFIG from "../../config";
+import { verificationTemplate } from "../../templates";
 
 @Injectable()
 export class MailService {
-    private readonly verificationTemplate = readFileSync(
-        `${resolve("src")}/templates/verification.html`,
-        "utf-8",
-    );
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: MongoRepository<UserEntity>,
@@ -52,7 +47,7 @@ export class MailService {
                     to: mail,
                     subject: "HastePaste E-Mail Verification",
                     text: "Please Verify Your HastePaste E-Mail",
-                    html: this.verificationTemplate.replace(
+                    html: verificationTemplate.replace(
                         "{{{verification_key}}}",
                         verification_key,
                     ),

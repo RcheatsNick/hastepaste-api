@@ -6,21 +6,11 @@ import { MongoRepository } from "typeorm";
 import { BanUserDTO } from "./dto/ban-user.dto";
 import { AuthService } from "../auth/auth.service";
 import { UnBanUserDTO } from "./dto/unban-user.dto copy";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 import CONFIG from "../../config";
+import { banTemplate, unBanTemplate } from "../../templates";
 
 @Injectable()
 export class AdminService {
-    private readonly banTemplate = readFileSync(
-        `${resolve("src")}/templates/banned.html`,
-        "utf-8",
-    );
-    private readonly unBanTemplate = readFileSync(
-        `${resolve("src")}/templates/unbanned.html`,
-        "utf-8",
-    );
-
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: MongoRepository<UserEntity>,
@@ -51,7 +41,7 @@ export class AdminService {
                     to: mail,
                     subject: "HastePaste Ban Notification",
                     text: "You Have Been Banned From HastePaste",
-                    html: this.banTemplate.replace("{{{reason}}}", reason),
+                    html: banTemplate.replace("{{{reason}}}", reason),
                 },
                 err => {
                     if (err) resolve(false);
@@ -70,7 +60,7 @@ export class AdminService {
                     subject: "HastePaste UnBan Notification",
                     text:
                         "Congratulations, You Have Been UnBanned From HastePaste!",
-                    html: this.unBanTemplate,
+                    html: unBanTemplate,
                 },
                 err => {
                     if (err) resolve(false);
