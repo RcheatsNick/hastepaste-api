@@ -6,7 +6,7 @@ import {
     HealthCheckService,
     HealthIndicatorResult,
 } from "@nestjs/terminus";
-import { HealthService } from "./health.service";
+import { HealthService } from "@routers/health/health.service";
 import { APIRes } from "api-types";
 
 @Controller("health")

@@ -1,26 +1,28 @@
-import {Layout} from "./layout";
-import { VerificationTemplate } from "./verification";
-import { BanTemplate } from "./ban";
-import { UnBanTemplate } from "./unban";
+import { Layout } from "@templates/layout";
+import { VerificationTemplate } from "@templates/verification";
+import { BanTemplate } from "@templates/ban";
+import { UnBanTemplate } from "@templates/unban";
 
-const verificationTemplate = Layout
-    .replace(/{{{title}}}/gim, "HastePaste E-Mail Verification")
+const verificationTemplate = Layout.replace(
+    /{{{title}}}/gim,
+    "HastePaste E-Mail Verification",
+)
     .replace(/{{{site}}}/gim, "https://hastepaste.xyz")
     .replace(/{{{contact}}}/gim, "contact@hastepaste.xyz")
     .replace(/{{{bug}}}/gim, "bug@hastepaste.xyz")
-    .replace(/{{{abuse}}}/gim, "abuse@hastepaste.xyz");
+    .replace(/{{{abuse}}}/gim, "abuse@hastepaste.xyz")
+    .replace(/{{{body}}}/gim, VerificationTemplate);
 
-const banTemplate = Layout
-    .replace(/{{{title}}}/gim, "HastePaste Ban Notifier")
+const banTemplate = Layout.replace(/{{{title}}}/gim, "HastePaste Ban Notifier")
     .replace(/{{{site}}}/gim, "https://hastepaste.xyz")
-    .replace(/{{{contact}}}/gim, "contact@hastepaste.xyz");
+    .replace(/{{{contact}}}/gim, "contact@hastepaste.xyz")
+    .replace(/{{{body}}}/gim, BanTemplate);
 
-const unBanTemplate = Layout
-    .replace(/{{{title}}}/gim, "HastePaste UnBan Notifier")
-    .replace(/{{{site}}}/gim, "https://hastepaste.xyz");
+const unBanTemplate = Layout.replace(
+    /{{{title}}}/gim,
+    "HastePaste UnBan Notifier",
+)
+    .replace(/{{{site}}}/gim, "https://hastepaste.xyz")
+    .replace(/{{{body}}}/gim, UnBanTemplate);
 
-export {
-    verificationTemplate,
-    banTemplate,
-    unBanTemplate
-}
+export { verificationTemplate, banTemplate, unBanTemplate };

@@ -7,12 +7,12 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { APIRes, IUser, VerificationResult } from "api-types";
 import { MongoRepository } from "typeorm";
-import { UserEntity } from "../auth/user.entity";
-import { VerifyEMailDTO } from "./dto/verify-email.dto";
-import { AuthService } from "../auth/auth.service";
+import { UserEntity } from "@routers/auth/user.entity";
+import { VerifyEMailDTO } from "@routers/mail/dto/verify-email.dto";
+import { AuthService } from "@routers/auth/auth.service";
 import * as Jwt from "jsonwebtoken";
-import CONFIG from "../../config";
-import { verificationTemplate } from "../../templates";
+import CONFIG from "src/config";
+import { verificationTemplate } from "@templates";
 
 @Injectable()
 export class MailService {

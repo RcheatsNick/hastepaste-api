@@ -1,13 +1,13 @@
 import { Injectable, HttpStatus, NotFoundException } from "@nestjs/common";
 import { APIRes, BanListResult } from "api-types";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "../auth/user.entity";
+import { UserEntity } from "@routers/auth/user.entity";
 import { MongoRepository } from "typeorm";
-import { BanUserDTO } from "./dto/ban-user.dto";
-import { AuthService } from "../auth/auth.service";
-import { UnBanUserDTO } from "./dto/unban-user.dto copy";
-import CONFIG from "../../config";
-import { banTemplate, unBanTemplate } from "../../templates";
+import { BanUserDTO } from "@routers/admin/dto/ban-user.dto";
+import { AuthService } from "@routers/auth/auth.service";
+import { UnBanUserDTO } from "@routers/admin/dto/unban-user.dto";
+import CONFIG from "src/config";
+import { banTemplate, unBanTemplate } from "@templates";
 
 @Injectable()
 export class AdminService {
@@ -101,7 +101,11 @@ export class AdminService {
         await this.userRepository.updateOne(
             { id },
             {
-                $set: { is_banned: false, ban_reason: null },
+                $set: {
+                    is_banned: false,
+                    ban_reason: null,
+                    mail_verified: false,
+                },
             },
         );
         return {

@@ -7,12 +7,12 @@ import {
     Delete,
     Patch,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { AuthService } from "@routers/auth/auth.service";
 import { AccessTokenData, APIRes, IUser, PatchResult } from "api-types";
-import { LoginSignupDTO } from "./dto/login-signup.dto";
-import { PatchDTO } from "./dto/patch.dto";
-import { AuthGuard } from "./auth.guard";
-import { User } from "./user.decorator";
+import { LoginSignupDTO } from "@routers/auth/dto/login-signup.dto";
+import { PatchDTO } from "@routers/auth/dto/patch.dto";
+import { AuthGuard } from "@routers/auth/auth.guard";
+import { User } from "@routers/auth/user.decorator";
 
 @Controller("auth")
 export class AuthController {

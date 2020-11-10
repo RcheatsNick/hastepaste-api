@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
-import { MailService } from "./mail.service";
+import { MailService } from "@routers/mail/mail.service";
 import { APIRes, IUser, VerificationResult } from "api-types";
-import { AuthGuard } from "../auth/auth.guard";
-import { VerifyEMailDTO } from "./dto/verify-email.dto";
-import { User } from "../auth/user.decorator";
+import { AuthGuard } from "@routers/auth/auth.guard";
+import { VerifyEMailDTO } from "@routers/mail/dto/verify-email.dto";
+import { User } from "@routers/auth/user.decorator";
 
 @Controller("mail")
 export class MailController {

@@ -1,9 +1,9 @@
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
-import { AdminService } from "./admin.service";
+import { AdminService } from "@routers/admin/admin.service";
 import { APIRes, BanListResult } from "api-types";
-import { BanUserDTO } from "./dto/ban-user.dto";
-import { UnBanUserDTO } from "./dto/unban-user.dto copy";
-import { AdminGuard } from "./admin.guard";
+import { BanUserDTO } from "@routers/admin/dto/ban-user.dto";
+import { UnBanUserDTO } from "@routers/admin/dto/unban-user.dto";
+import { AdminGuard } from "@routers/admin/admin.guard";
 
 @Controller("admin")
 export class AdminController {

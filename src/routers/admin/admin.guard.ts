@@ -7,9 +7,9 @@ import {
 } from "@nestjs/common";
 import { IUser } from "api-types";
 import * as Jwt from "jsonwebtoken";
-import CONFIG from "../../config";
-import { AuthService } from "../auth/auth.service";
-import { AdminService } from "./admin.service";
+import CONFIG from "src/config";
+import { AuthService } from "@routers/auth/auth.service";
+import { AdminService } from "@routers/admin/admin.service";
 
 @Injectable()
 export class AdminGuard implements CanActivate {

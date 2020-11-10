@@ -1,6 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
 import { ValidateIf } from "class-validator";
-import { Snowflake } from "../../../libs/snowflake";
+import { Snowflake } from "@snowflake";
 const SnowflakeFactory = new Snowflake();
 
 export abstract class UnBanUserDTO {

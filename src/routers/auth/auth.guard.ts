@@ -7,8 +7,8 @@ import {
 } from "@nestjs/common";
 import { IUser } from "api-types";
 import * as Jwt from "jsonwebtoken";
-import CONFIG from "../../config";
-import { AuthService } from "./auth.service";
+import CONFIG from "src/config";
+import { AuthService } from "@routers/auth/auth.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {

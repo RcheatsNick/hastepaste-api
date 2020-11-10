@@ -10,6 +10,13 @@
 		"sourceMap": true,
 		"outDir": "./dist",
 		"baseUrl": "./",
-		"incremental": true
+		"incremental": true,
+		"paths": {
+			"@snowflake": [ "src/libs/snowflake" ],
+			"@crypto": [ "src/libs/crypto" ],
+			"@templates": [ "src/templates" ],
+			"@routers/*": [ "src/routers/*" ],
+			"@templates/*": [ "src/templates/*" ]
+		}
 	}
 }

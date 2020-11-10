@@ -6,8 +6,8 @@ import {
 } from "@nestjs/platform-fastify";
 import * as morgan from "morgan";
 import { ValidationPipe } from "@nestjs/common";
-import { AppModule } from "./app.module";
-import CONFIG from "./config";
+import { AppModule } from "src/app.module";
+import CONFIG from "src/config";
 
 async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
