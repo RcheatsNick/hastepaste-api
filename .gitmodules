@@ -4,3 +4,6 @@
 [submodule "src/libs/crypto"]
 	path = src/libs/crypto
 	url = https://github.com/HastePasteApp/crypto
+[submodule "src/libs/randomstring"]
+	path = src/libs/randomstring
+	url = https://github.com/HastePasteApp/randomstring
