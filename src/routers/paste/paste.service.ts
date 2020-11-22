@@ -2,7 +2,7 @@ import { Injectable, HttpStatus } from "@nestjs/common";
 import { APIRes } from "api-types";
 
 @Injectable()
-export class PingService {
+export class PasteService {
     public returnPing(): APIRes<null> {
         return {
             statusCode: HttpStatus.OK,

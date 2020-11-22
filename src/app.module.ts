@@ -8,6 +8,7 @@ import { PingModule } from "@routers/ping/ping.module";
 import { AuthModule } from "@routers/auth/auth.module";
 import { AdminModule } from "@routers/admin/admin.module";
 import { MailModule } from "@routers/mail/mail.module";
+import { PasteModule } from "@routers/paste/paste.module";
 import CONFIG from "src/config";
 
 @Module({
@@ -31,6 +32,7 @@ import CONFIG from "src/config";
         AuthModule,
         AdminModule,
         MailModule,
+        PasteModule,
     ],
     controllers: [AppController],
     providers: [{ provide: APP_GUARD, useClass: RateLimiterGuard }],
