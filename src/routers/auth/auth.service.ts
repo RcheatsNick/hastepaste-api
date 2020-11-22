@@ -42,7 +42,7 @@ export class AuthService {
         if (!isUnique)
             throw new ConflictException("This mail is already registered");
         const id = this.snowflakeService.generate();
-        const user = await this.userRepository.create({
+        const user = this.userRepository.create({
             mail,
             password: this.cryptoService.encrypt(CONFIG.SECRET, password),
             id,
