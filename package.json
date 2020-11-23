@@ -12,13 +12,13 @@
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
-        "format": "prettier --write \"src/**/*.ts\"",
-        "format:watch": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
+        "format": "prettier --write \"{src,scripts}/**/*.ts\"",
+        "format:watch": "onchange \"{src,scripts}/**/*.ts\" -- prettier --write {{changed}}",
         "start": "nest start",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
-        "lint": "eslint \"src/**/*.ts\" --fix",
+        "lint": "eslint \"{src,scripts}/**/*.ts\" --fix",
         "submodule": "git submodule init && git submodule update",
         "secrets:get": "ts-node scripts/secrets.ts GET",
         "secrets:post": "ts-node scripts/secrets.ts POST"

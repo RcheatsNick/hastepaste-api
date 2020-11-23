@@ -12,8 +12,9 @@
 		"baseUrl": "./",
 		"incremental": true,
 		"paths": {
-			"@snowflake": [ "src/libs/snowflake" ],
-			"@crypto": [ "src/libs/crypto" ],
+			"@snowflake": [ "libs/snowflake" ],
+			"@crypto": [ "libs/crypto" ],
+			"@randomstring": [ "libs/randomstring" ],
 			"@templates": [ "src/templates" ],
 			"@routers/*": [ "src/routers/*" ],
 			"@templates/*": [ "src/templates/*" ]

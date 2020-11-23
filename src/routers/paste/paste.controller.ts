@@ -26,7 +26,7 @@ export class PasteController {
 
     @Get()
     public getPaste(
-        @Query() getPasteDTO: GetPasteDTO
+        @Query() getPasteDTO: GetPasteDTO,
     ): Promise<APIRes<GetPaste>> {
         return this.pasteService.getPaste(getPasteDTO);
     }

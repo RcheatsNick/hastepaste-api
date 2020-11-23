@@ -1,9 +1,9 @@
-[submodule "src/libs/snowflake"]
-	path = src/libs/snowflake
-	url = https://github.com/HastePasteApp/snowflake
-[submodule "src/libs/crypto"]
-	path = src/libs/crypto
-	url = https://github.com/HastePasteApp/crypto
-[submodule "src/libs/randomstring"]
-	path = src/libs/randomstring
+[submodule "libs/randomstring"]
+	path = libs/randomstring
 	url = https://github.com/HastePasteApp/randomstring
+[submodule "libs/crypto"]
+	path = libs/crypto
+	url = https://github.com/HastePasteApp/crypto
+[submodule "libs/snowflake"]
+	path = libs/snowflake
+	url = https://github.com/HastePasteApp/snowflake
