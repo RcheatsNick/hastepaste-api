@@ -21,6 +21,9 @@ export class PasteEntity {
     @Column({ nullable: false })
     public content: string;
 
+    @Column({ nullable: false })
+    public title: string;
+
     @CreateDateColumn({ type: "timestamp" })
     public createdAt: number;
 

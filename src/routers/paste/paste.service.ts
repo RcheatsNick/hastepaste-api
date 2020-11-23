@@ -1,11 +1,18 @@
 import { Injectable, HttpStatus, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { APIRes, CreatedPaste, GetPaste, IUser } from "api-types";
+import {
+    APIRes,
+    CreatedPaste,
+    GetPaste,
+    IUser,
+    PersonalPaste,
+} from "api-types";
 import { RandomString } from "@randomstring";
 import { MongoRepository } from "typeorm";
 import { CreatePasteDTO } from "./dto/create-paste.dto";
 import { GetPasteDTO } from "./dto/get-paste.dto";
 import { PasteEntity } from "./paste.entity";
+import { DeletePasteDTO } from "./dto/delete-paste.dto";
 
 @Injectable()
 export class PasteService {
@@ -22,12 +29,13 @@ export class PasteService {
         };
     }
     public async createPaste(
-        { paste }: CreatePasteDTO,
+        { paste, title }: CreatePasteDTO,
         user?: IUser,
     ): Promise<APIRes<CreatedPaste>> {
         const id = this.randomStringService.generate();
         const pasteData = this.pasteRepository.create({
             id,
+            title,
             content: paste,
             owner_id: user && user.id ? user.id : null,
         });
@@ -51,10 +59,45 @@ export class PasteService {
             statusCode: HttpStatus.OK,
             message: "Paste found",
             data: {
+                title: pasteData.title,
                 paste: pasteData.content,
                 owner: pasteData.owner_id,
                 createdAt: pasteData.createdAt,
             },
+        };
+    }
+    public async getPersonalPasteData({
+        id,
+    }: IUser): Promise<APIRes<PersonalPaste>> {
+        const pasteData = (
+            await this.pasteRepository.find({ owner_id: id })
+        ).map(paste => {
+            return {
+                id: paste.id,
+                title: paste.title,
+                createdAt: paste.createdAt,
+            };
+        });
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Get personal paste data",
+            data: pasteData,
+        };
+    }
+    public async deletePaste(
+        { id }: DeletePasteDTO,
+        { id: owner_id }: IUser,
+    ): Promise<APIRes<boolean>> {
+        const isExists = this.pasteRepository.findOne({ id, owner_id });
+        if (!isExists)
+            throw new BadRequestException(
+                `Paste with id ${id} not found on ${owner_id}'s account`,
+            );
+        await this.pasteRepository.deleteOne({ id, owner_id });
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Paste deleted successfully",
+            data: true,
         };
     }
 }

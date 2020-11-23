@@ -1,10 +1,26 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Post,
+    Query,
+    UseGuards,
+} from "@nestjs/common";
 import { PasteService } from "@routers/paste/paste.service";
-import { APIRes, CreatedPaste, GetPaste, IUser } from "api-types";
+import {
+    APIRes,
+    CreatedPaste,
+    GetPaste,
+    IUser,
+    PersonalPaste,
+} from "api-types";
 import { PasteGuard } from "@routers/paste/paste.guard";
 import { User } from "@routers/auth/user.decorator";
 import { CreatePasteDTO } from "./dto/create-paste.dto";
 import { GetPasteDTO } from "./dto/get-paste.dto";
+import { AuthGuard } from "@routers/auth/auth.guard";
+import { DeletePasteDTO } from "./dto/delete-paste.dto";
 
 @Controller("paste")
 export class PasteController {
@@ -25,14 +41,26 @@ export class PasteController {
     }
 
     @Get()
-    public getPaste(
+    public async getPaste(
         @Query() getPasteDTO: GetPasteDTO,
     ): Promise<APIRes<GetPaste>> {
         return this.pasteService.getPaste(getPasteDTO);
     }
 
-    /*
-        TODO:
-        Delete and get personal paste
-    */
+    @Get("@me")
+    @UseGuards(AuthGuard)
+    public async getPersonalPasteData(
+        @User() user: IUser,
+    ): Promise<APIRes<PersonalPaste>> {
+        return this.pasteService.getPersonalPasteData(user);
+    }
+
+    @Delete()
+    @UseGuards(AuthGuard)
+    public async deletePaste(
+        @Body() deletePasteDTO: DeletePasteDTO,
+        @User() user: IUser,
+    ): Promise<APIRes<boolean>> {
+        return this.pasteService.deletePaste(deletePasteDTO, user);
+    }
 }

@@ -8,12 +8,15 @@ import { AuthService } from "@routers/auth/auth.service";
 import { UnBanUserDTO } from "@routers/admin/dto/unban-user.dto";
 import CONFIG from "src/config";
 import { banTemplate, unBanTemplate } from "@templates";
+import { PasteEntity } from "@routers/paste/paste.entity";
 
 @Injectable()
 export class AdminService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: MongoRepository<UserEntity>,
+        @InjectRepository(PasteEntity)
+        private readonly pasteRepository: MongoRepository<PasteEntity>,
         private readonly authService: AuthService,
     ) {}
 
@@ -82,6 +85,9 @@ export class AdminService {
                 $set: { is_banned: true, ban_reason: reason },
             },
         );
+        await this.pasteRepository.deleteMany({
+            owner_id: id,
+        });
         if (user.mail_verified)
             await this.sendBanNotificationMail(user.mail, reason);
         return {

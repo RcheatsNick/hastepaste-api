@@ -31,7 +31,13 @@ declare module "api-types" {
     export interface GetPaste {
         paste: string;
         owner?: string;
+        title: string;
         createdAt: number;
     }
+    export type PersonalPaste = {
+        id: string;
+        title: string;
+        createdAt: number;
+    }[];
     export type BanListResult = { id: string; reason: string; mail: string }[];
 }
