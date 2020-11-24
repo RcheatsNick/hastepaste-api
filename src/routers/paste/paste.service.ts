@@ -9,10 +9,10 @@ import {
 } from "api-types";
 import { RandomString } from "@randomstring";
 import { MongoRepository } from "typeorm";
-import { CreatePasteDTO } from "./dto/create-paste.dto";
-import { GetPasteDTO } from "./dto/get-paste.dto";
-import { PasteEntity } from "./paste.entity";
-import { DeletePasteDTO } from "./dto/delete-paste.dto";
+import { CreatePasteDTO } from "@routers/paste/dto/create-paste.dto";
+import { GetPasteDTO } from "@routers/paste/dto/get-paste.dto";
+import { PasteEntity } from "@routers/paste/paste.entity";
+import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
 
 @Injectable()
 export class PasteService {

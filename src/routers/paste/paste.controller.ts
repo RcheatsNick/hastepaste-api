@@ -17,10 +17,10 @@ import {
 } from "api-types";
 import { PasteGuard } from "@routers/paste/paste.guard";
 import { User } from "@routers/auth/user.decorator";
-import { CreatePasteDTO } from "./dto/create-paste.dto";
-import { GetPasteDTO } from "./dto/get-paste.dto";
+import { CreatePasteDTO } from "@routers/paste/dto/create-paste.dto";
+import { GetPasteDTO } from "@routers/paste/dto/get-paste.dto";
 import { AuthGuard } from "@routers/auth/auth.guard";
-import { DeletePasteDTO } from "./dto/delete-paste.dto";
+import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
 
 @Controller("paste")
 export class PasteController {
