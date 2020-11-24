@@ -20,8 +20,9 @@
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,scripts}/**/*.ts\" --fix",
         "submodule": "git submodule init && git submodule update",
-        "secrets:get": "ts-node scripts/secrets.ts GET",
-        "secrets:post": "ts-node scripts/secrets.ts POST"
+        "secrets:write": "ts-node scripts/secrets.ts get --write",
+        "secrets:get": "ts-node scripts/secrets.ts get",
+        "secrets:post": "ts-node scripts/secrets.ts post"
     },
     "dependencies": {
         "@nestjs/common": "^7.0.0",
@@ -33,6 +34,7 @@
         "@types/nodemailer": "^6.4.0",
         "class-transformer": "^0.3.1",
         "class-validator": "^0.12.2",
+        "daph": "^1.0.0",
         "dotenv": "^8.2.0",
         "fastify-helmet": "^5.0.3",
         "jsonwebtoken": "^8.5.1",
