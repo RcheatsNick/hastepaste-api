@@ -33,10 +33,16 @@ declare module "api-types" {
         owner?: string;
         title: string;
         createdAt: number;
+        fork_id?: string;
+    }
+    export interface ForkPaste {
+        id: string;
+        fork_id: string;
     }
     export type PersonalPaste = {
         id: string;
         title: string;
+        fork_id?: string;
         createdAt: number;
     }[];
     export type BanListResult = { id: string; reason: string; mail: string }[];

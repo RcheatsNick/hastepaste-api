@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import {
     APIRes,
     CreatedPaste,
+    ForkPaste,
     GetPaste,
     IUser,
     PersonalPaste,
@@ -13,6 +14,7 @@ import { CreatePasteDTO } from "@routers/paste/dto/create-paste.dto";
 import { GetPasteDTO } from "@routers/paste/dto/get-paste.dto";
 import { PasteEntity } from "@routers/paste/paste.entity";
 import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
+import { ForkPasteDTO } from "./dto/fork-paste.dto";
 
 @Injectable()
 export class PasteService {
@@ -21,6 +23,12 @@ export class PasteService {
         private readonly pasteRepository: MongoRepository<PasteEntity>,
         private readonly randomStringService: RandomString,
     ) {}
+    private async getPasteById(id: string): Promise<PasteEntity> {
+        const pasteData = await this.pasteRepository.findOne({ id });
+        if (!pasteData)
+            throw new BadRequestException(`Paste with id "${id}" not found`);
+        return pasteData;
+    }
     public returnPing(): APIRes<null> {
         return {
             statusCode: HttpStatus.OK,
@@ -50,11 +58,7 @@ export class PasteService {
         };
     }
     public async getPaste({ id }: GetPasteDTO): Promise<APIRes<GetPaste>> {
-        const pasteData = await this.pasteRepository.findOne({
-            id,
-        });
-        if (!pasteData)
-            throw new BadRequestException(`Paste with id "${id}" not found`);
+        const pasteData = await this.getPasteById(id);
         return {
             statusCode: HttpStatus.OK,
             message: "Paste found",
@@ -62,6 +66,7 @@ export class PasteService {
                 title: pasteData.title,
                 paste: pasteData.content,
                 owner: pasteData.owner_id,
+                fork_id: pasteData.fork_id,
                 createdAt: pasteData.createdAt,
             },
         };
@@ -75,6 +80,7 @@ export class PasteService {
             return {
                 id: paste.id,
                 title: paste.title,
+                fork_id: paste.fork_id,
                 createdAt: paste.createdAt,
             };
         });
@@ -98,6 +104,29 @@ export class PasteService {
             statusCode: HttpStatus.OK,
             message: "Paste deleted successfully",
             data: true,
+        };
+    }
+    public async forkPaste(
+        { id: fork_id }: ForkPasteDTO,
+        { id: owner_id }: IUser,
+    ): Promise<APIRes<ForkPaste>> {
+        const forkData = await this.getPasteById(fork_id);
+        const id = this.randomStringService.generate();
+        const pasteData = this.pasteRepository.create({
+            id,
+            owner_id,
+            title: forkData.title,
+            content: forkData.content,
+            fork_id: forkData.id,
+        });
+        await this.pasteRepository.save(pasteData);
+        return {
+            statusCode: HttpStatus.CREATED,
+            message: "Paste forked",
+            data: {
+                id,
+                fork_id: forkData.id,
+            },
         };
     }
 }

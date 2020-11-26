@@ -18,6 +18,9 @@ export class PasteEntity {
     @Column()
     public owner_id?: string;
 
+    @Column()
+    public fork_id?: string;
+
     @Column({ nullable: false })
     public content: string;
 
