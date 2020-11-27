@@ -21,6 +21,9 @@ export class PasteEntity {
     @Column()
     public fork_id?: string;
 
+    @Column()
+    public is_reported?: boolean;
+
     @Column({ nullable: false })
     public content: string;
 

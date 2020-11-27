@@ -34,6 +34,7 @@ declare module "api-types" {
         title: string;
         createdAt: number;
         fork_id?: string;
+        is_reported?: boolean;
     }
     export interface ForkPaste {
         id: string;
@@ -44,6 +45,14 @@ declare module "api-types" {
         title: string;
         fork_id?: string;
         createdAt: number;
+        is_reported?: boolean;
     }[];
     export type BanListResult = { id: string; reason: string; mail: string }[];
+    export type ReportListResult = { 
+        id: string;
+        owner?: string;
+        content: string;
+        fork_id?: string;
+        title: string;
+    }[];
 }

@@ -1,5 +1,5 @@
 import { Injectable, HttpStatus, NotFoundException } from "@nestjs/common";
-import { APIRes, BanListResult } from "api-types";
+import { APIRes, BanListResult, ReportListResult } from "api-types";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "@routers/auth/user.entity";
 import { MongoRepository } from "typeorm";
@@ -9,6 +9,8 @@ import { UnBanUserDTO } from "@routers/admin/dto/unban-user.dto";
 import CONFIG from "src/config";
 import { banTemplate, unBanTemplate } from "@templates";
 import { PasteEntity } from "@routers/paste/paste.entity";
+import { UnReportPasteDTO } from "./dto/unreport-paste.dto";
+import { PasteService } from "@routers/paste/paste.service";
 
 @Injectable()
 export class AdminService {
@@ -18,6 +20,7 @@ export class AdminService {
         @InjectRepository(PasteEntity)
         private readonly pasteRepository: MongoRepository<PasteEntity>,
         private readonly authService: AuthService,
+        private readonly pasteService: PasteService,
     ) {}
 
     public returnPing(): APIRes<null> {
@@ -121,6 +124,27 @@ export class AdminService {
         };
     }
 
+    public async unReportPaste({ id }: UnReportPasteDTO): Promise<APIRes<null>> {
+        const paste = await this.pasteService.getPasteById(id);
+        if (!paste) throw new NotFoundException("Paste not found");
+        const isReported = paste.is_reported
+        if (!isReported)
+            throw new NotFoundException("This paste is not reported");
+        await this.pasteRepository.updateOne(
+            { id },
+            {
+                $set: {
+                    is_reported: false,
+                },
+            },
+        );
+        return {
+            statusCode: HttpStatus.OK,
+            message: "paste successfully unreported",
+            data: null,
+        };
+    }
+
     public async getBanList(): Promise<APIRes<BanListResult>> {
         const bannedUsers = await this.userRepository.find({ is_banned: true });
         const data = bannedUsers.map(user => {
@@ -133,6 +157,24 @@ export class AdminService {
         return {
             statusCode: HttpStatus.OK,
             message: "Ban list",
+            data,
+        };
+    }
+
+    public async getReportList(): Promise<APIRes<ReportListResult>> {
+        const reportedPastes = await this.pasteRepository.find({ is_reported: true });
+        const data = reportedPastes.map(paste => {
+            return {
+                owner: paste.owner_id,
+                content: paste.content,
+                fork_id: paste.fork_id,
+                title: paste.title,
+                id: paste.id
+            };
+        });
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Report list",
             data,
         };
     }
