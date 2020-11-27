@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    Patch,
     Post,
     Query,
     UseGuards,
@@ -23,6 +24,7 @@ import { GetPasteDTO } from "@routers/paste/dto/get-paste.dto";
 import { AuthGuard } from "@routers/auth/auth.guard";
 import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
 import { ForkPasteDTO } from "./dto/fork-paste.dto";
+import { EditPasteDTO } from "./dto/edit-paste.dto";
 
 @Controller("paste")
 export class PasteController {
@@ -73,5 +75,14 @@ export class PasteController {
         @User() user: IUser,
     ): Promise<APIRes<boolean>> {
         return this.pasteService.deletePaste(deletePasteDTO, user);
+    }
+
+    @Patch()
+    @UseGuards(AuthGuard)
+    public async editPaste(
+        @Body() editPasteDTO: EditPasteDTO,
+        @User() user: IUser,
+    ): Promise<APIRes<boolean>> {
+        return this.pasteService.editPaste(editPasteDTO, user);
     }
 }

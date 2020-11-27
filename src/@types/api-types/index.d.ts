@@ -48,7 +48,7 @@ declare module "api-types" {
         is_reported?: boolean;
     }[];
     export type BanListResult = { id: string; reason: string; mail: string }[];
-    export type ReportListResult = { 
+    export type ReportListResult = {
         id: string;
         owner?: string;
         content: string;

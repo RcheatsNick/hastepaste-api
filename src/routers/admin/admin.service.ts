@@ -124,10 +124,12 @@ export class AdminService {
         };
     }
 
-    public async unReportPaste({ id }: UnReportPasteDTO): Promise<APIRes<null>> {
+    public async unReportPaste({
+        id,
+    }: UnReportPasteDTO): Promise<APIRes<null>> {
         const paste = await this.pasteService.getPasteById(id);
         if (!paste) throw new NotFoundException("Paste not found");
-        const isReported = paste.is_reported
+        const isReported = paste.is_reported;
         if (!isReported)
             throw new NotFoundException("This paste is not reported");
         await this.pasteRepository.updateOne(
@@ -162,14 +164,16 @@ export class AdminService {
     }
 
     public async getReportList(): Promise<APIRes<ReportListResult>> {
-        const reportedPastes = await this.pasteRepository.find({ is_reported: true });
+        const reportedPastes = await this.pasteRepository.find({
+            is_reported: true,
+        });
         const data = reportedPastes.map(paste => {
             return {
                 owner: paste.owner_id,
                 content: paste.content,
                 fork_id: paste.fork_id,
                 title: paste.title,
-                id: paste.id
+                id: paste.id,
             };
         });
         return {

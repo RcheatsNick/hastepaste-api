@@ -1,4 +1,9 @@
-import { Injectable, HttpStatus, BadRequestException, UnauthorizedException } from "@nestjs/common";
+import {
+    Injectable,
+    HttpStatus,
+    BadRequestException,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
     APIRes,
@@ -15,6 +20,7 @@ import { GetPasteDTO } from "@routers/paste/dto/get-paste.dto";
 import { PasteEntity } from "@routers/paste/paste.entity";
 import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
 import { ForkPasteDTO } from "./dto/fork-paste.dto";
+import { EditPasteDTO } from "./dto/edit-paste.dto";
 
 @Injectable()
 export class PasteService {
@@ -68,7 +74,7 @@ export class PasteService {
                 owner: pasteData.owner_id,
                 fork_id: pasteData.fork_id,
                 createdAt: pasteData.createdAt,
-                is_reported: pasteData.is_reported
+                is_reported: pasteData.is_reported,
             },
         };
     }
@@ -83,7 +89,7 @@ export class PasteService {
                 title: paste.title,
                 fork_id: paste.fork_id,
                 createdAt: paste.createdAt,
-                is_reported: paste.is_reported
+                is_reported: paste.is_reported,
             };
         });
         return {
@@ -101,7 +107,10 @@ export class PasteService {
             throw new BadRequestException(
                 `Paste with id ${id} not found on ${owner_id}'s account`,
             );
-        if (isExists.is_reported) throw new UnauthorizedException("This paste is reported and only can be deleted by an admin");
+        if (isExists.is_reported)
+            throw new UnauthorizedException(
+                "This paste is reported and only can be deleted by an admin",
+            );
         await this.pasteRepository.deleteOne({ id, owner_id });
         return {
             statusCode: HttpStatus.OK,
@@ -114,14 +123,17 @@ export class PasteService {
         { id: owner_id }: IUser,
     ): Promise<APIRes<ForkPaste>> {
         const forkData = await this.getPasteById(fork_id);
-        if (forkData.is_reported) throw new UnauthorizedException("This paste is reported and only can be forked by an admin");
+        if (forkData.is_reported)
+            throw new UnauthorizedException(
+                "This paste is reported and only can be forked by an admin",
+            );
         const id = this.randomStringService.generate();
         const pasteData = this.pasteRepository.create({
             id,
             owner_id,
             title: forkData.title,
             content: forkData.content,
-            fork_id: forkData.id
+            fork_id: forkData.id,
         });
         await this.pasteRepository.save(pasteData);
         return {
@@ -131,6 +143,38 @@ export class PasteService {
                 id,
                 fork_id: forkData.id,
             },
+        };
+    }
+
+    public async editPaste(
+        { id, paste, title }: EditPasteDTO,
+        { id: owner_id }: IUser,
+    ): Promise<APIRes<boolean>> {
+        const isExists = await this.pasteRepository.findOne({ id, owner_id });
+        if (!isExists)
+            throw new BadRequestException(
+                `Paste with id ${id} not found on ${owner_id}'s account`,
+            );
+        if (isExists.is_reported)
+            throw new UnauthorizedException(
+                "This paste is reported and only can be edited by an admin",
+            );
+        if (!paste && !title)
+            throw new BadRequestException("paste or title required");
+        const data = {
+            paste: paste ? paste : isExists.content,
+            title: title ? title : isExists.title,
+        };
+        await this.pasteRepository.updateOne(
+            { id, owner_id },
+            {
+                $set: data,
+            },
+        );
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Paste edited successfully",
+            data: true,
         };
     }
 }
