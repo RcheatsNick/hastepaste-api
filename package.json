@@ -10,7 +10,7 @@
     "private": true,
     "license": "gpl-3.0",
     "scripts": {
-        "prebuild": "rimraf dist && yarn submodule",
+        "prebuild": "rimraf dist",
         "build": "nest build",
         "format": "prettier --write \"{src,scripts}/**/*.ts\"",
         "format:watch": "onchange \"{src,scripts}/**/*.ts\" -- prettier --write {{changed}}",
@@ -19,7 +19,6 @@
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,scripts}/**/*.ts\" --fix",
-        "submodule": "git submodule init && git submodule update",
         "secrets:write": "ts-node scripts/secrets.ts get --write",
         "secrets:get": "ts-node scripts/secrets.ts get",
         "secrets:post": "ts-node scripts/secrets.ts post"
