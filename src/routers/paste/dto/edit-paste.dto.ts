@@ -9,4 +9,7 @@ export abstract class EditPasteDTO {
 
     @IsOptional()
     public title?: string;
+
+    @IsOptional()
+    public description?: string;
 }

@@ -13,6 +13,7 @@ declare module "api-types" {
         id: string;
         mail?: string;
         password?: string;
+        description?: string;
     }
     export interface IUser {
         mail: string;
@@ -35,6 +36,7 @@ declare module "api-types" {
         createdAt: number;
         fork_id?: string;
         is_reported?: boolean;
+        description?: string;
     }
     export interface ForkPaste {
         id: string;
@@ -46,6 +48,7 @@ declare module "api-types" {
         fork_id?: string;
         createdAt: number;
         is_reported?: boolean;
+        description?: string;
     }[];
     export type BanListResult = { id: string; reason: string; mail: string }[];
     export type ReportListResult = {
@@ -54,5 +57,6 @@ declare module "api-types" {
         content: string;
         fork_id?: string;
         title: string;
+        description?: string;
     }[];
 }

@@ -43,7 +43,7 @@ export class PasteService {
         };
     }
     public async createPaste(
-        { paste, title }: CreatePasteDTO,
+        { paste, title, description }: CreatePasteDTO,
         user?: IUser,
     ): Promise<APIRes<CreatedPaste>> {
         const id = this.randomStringService.generate();
@@ -51,6 +51,7 @@ export class PasteService {
             id,
             title,
             content: paste,
+            description,
             owner_id: user && user.id ? user.id : null,
         });
         await this.pasteRepository.save(pasteData);
@@ -75,6 +76,7 @@ export class PasteService {
                 fork_id: pasteData.fork_id,
                 createdAt: pasteData.createdAt,
                 is_reported: pasteData.is_reported,
+                description: pasteData.description,
             },
         };
     }
@@ -90,6 +92,7 @@ export class PasteService {
                 fork_id: paste.fork_id,
                 createdAt: paste.createdAt,
                 is_reported: paste.is_reported,
+                description: paste.description,
             };
         });
         return {
@@ -147,7 +150,7 @@ export class PasteService {
     }
 
     public async editPaste(
-        { id, paste, title }: EditPasteDTO,
+        { id, paste, title, description }: EditPasteDTO,
         { id: owner_id }: IUser,
     ): Promise<APIRes<boolean>> {
         const isExists = await this.pasteRepository.findOne({ id, owner_id });
@@ -162,8 +165,9 @@ export class PasteService {
         if (!paste && !title)
             throw new BadRequestException("paste or title required");
         const data = {
-            paste: paste ? paste : isExists.content,
-            title: title ? title : isExists.title,
+            paste: paste || isExists.content,
+            title: title || isExists.title,
+            description: description || isExists.description,
         };
         await this.pasteRepository.updateOne(
             { id, owner_id },

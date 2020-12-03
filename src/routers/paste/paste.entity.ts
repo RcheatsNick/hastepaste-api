@@ -24,6 +24,9 @@ export class PasteEntity {
     @Column()
     public is_reported?: boolean;
 
+    @Column()
+    public description?: string;
+
     @Column({ nullable: false })
     public content: string;
 

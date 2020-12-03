@@ -1,4 +1,4 @@
-import { IsDefined } from "class-validator";
+import { IsDefined, IsOptional } from "class-validator";
 
 export abstract class CreatePasteDTO {
     @IsDefined()
@@ -6,4 +6,7 @@ export abstract class CreatePasteDTO {
 
     @IsDefined()
     public title: string;
+
+    @IsOptional()
+    public description?: string;
 }
