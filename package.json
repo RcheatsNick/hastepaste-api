@@ -10,7 +10,7 @@
     "private": true,
     "license": "gpl-3.0",
     "scripts": {
-        "prebuild": "rimraf dist",
+        "prebuild": "rimraf dist && yarn submodule",
         "build": "nest build",
         "format": "prettier --write \"{src,scripts}/**/*.ts\"",
         "format:watch": "onchange \"{src,scripts}/**/*.ts\" -- prettier --write {{changed}}",
