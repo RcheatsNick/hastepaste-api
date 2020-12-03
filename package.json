@@ -14,7 +14,7 @@
         "build": "nest build",
         "format": "prettier --write \"{src,scripts}/**/*.ts\"",
         "format:watch": "onchange \"{src,scripts}/**/*.ts\" -- prettier --write {{changed}}",
-        "start": "nest start",
+        "start": "node dist/src/main",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
