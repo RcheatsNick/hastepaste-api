@@ -8,7 +8,7 @@ import {
     Patch,
 } from "@nestjs/common";
 import { AuthService } from "@routers/auth/auth.service";
-import { AccessTokenData, APIRes, IUser, PatchResult } from "api-types";
+import { AccessTokenData, APIRes, IUser, PatchResult, PersonalInfo } from "api-types";
 import { LoginSignupDTO } from "@routers/auth/dto/login-signup.dto";
 import { PatchDTO } from "@routers/auth/dto/patch.dto";
 import { AuthGuard } from "@routers/auth/auth.guard";
@@ -52,9 +52,11 @@ export class AuthController {
         return await this.authService.patchUser(patchDTO, user);
     }
 
-    @Get("test")
+    @Get("@me")
     @UseGuards(AuthGuard)
-    public testAccessToken(): APIRes<null> {
-        return this.authService.replyPing();
+    public async getPersonalInfo(
+        @User() user: IUser
+    ): Promise<APIRes<PersonalInfo>> {
+        return this.authService.getPersonalInfo(user);
     }
 }

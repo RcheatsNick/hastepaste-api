@@ -7,7 +7,7 @@ import {
     UnauthorizedException,
 } from "@nestjs/common";
 import { MongoRepository } from "typeorm";
-import { AccessTokenData, APIRes, IUser, PatchResult } from "api-types";
+import { AccessTokenData, APIRes, IUser, PatchResult, PersonalInfo } from "api-types";
 import * as Jwt from "jsonwebtoken";
 import { LoginSignupDTO } from "@routers/auth/dto/login-signup.dto";
 import { PatchDTO } from "@routers/auth/dto/patch.dto";
@@ -16,6 +16,7 @@ import { UserEntity } from "@routers/auth/user.entity";
 import { Crypto } from "@crypto";
 import { Snowflake } from "@snowflake";
 import CONFIG from "src/config";
+import { PasteService } from "@routers/paste/paste.service";
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ export class AuthService {
         private readonly userRepository: MongoRepository<UserEntity>,
         private readonly snowflakeService: Snowflake,
         private readonly cryptoService: Crypto,
+        private readonly pasteService: PasteService
     ) {}
 
     public replyPing(): APIRes<null> {
@@ -189,5 +191,19 @@ export class AuthService {
                 ...updateData,
             },
         };
+    }
+    public async getPersonalInfo(user: IUser): Promise<APIRes<PersonalInfo>> {
+        const userData = await this.getUserByID(user.id);
+        if (!userData) throw new NotFoundException("User not found");
+        if (userData.is_banned) throw new UnauthorizedException("This account has been banned");
+        const { data: paste } = await this.pasteService.getPersonalPasteData(user);
+        return {
+            statusCode: 200,
+            message: "Personal info",
+            data: {
+                user,
+                paste
+            }
+        }
     }
 }

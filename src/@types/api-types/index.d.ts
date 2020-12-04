@@ -50,6 +50,10 @@ declare module "api-types" {
         is_reported?: boolean;
         description?: string;
     }[];
+    export interface PersonalInfo {
+        user: IUser;
+        paste: PersonalPaste;
+    }
     export type BanListResult = { id: string; reason: string; mail: string }[];
     export type ReportListResult = {
         id: string;
