@@ -141,6 +141,7 @@ export class PasteService {
             title: forkData.title + " (fork)",
             content: forkData.content,
             fork_id: forkData.id,
+            description: forkData.description
         });
         await this.pasteRepository.save(pasteData);
         return {
