@@ -130,11 +130,15 @@ export class PasteService {
             throw new UnauthorizedException(
                 "This paste is reported and only can be forked by an admin",
             );
+        if (forkData.owner_id === owner_id) 
+            throw new BadRequestException(
+                "You cannot fork your paste",
+            );
         const id = this.randomStringService.generate();
         const pasteData = this.pasteRepository.create({
             id,
             owner_id,
-            title: forkData.title,
+            title: forkData.title + " (fork)",
             content: forkData.content,
             fork_id: forkData.id,
         });
