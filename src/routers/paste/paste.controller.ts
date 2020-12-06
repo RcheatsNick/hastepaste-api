@@ -25,6 +25,7 @@ import { AuthGuard } from "@routers/auth/auth.guard";
 import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
 import { ForkPasteDTO } from "./dto/fork-paste.dto";
 import { EditPasteDTO } from "./dto/edit-paste.dto";
+import { ReportPasteDTO } from "./dto/report-paste.dto";
 
 @Controller("paste")
 export class PasteController {
@@ -49,6 +50,15 @@ export class PasteController {
         @Query() getPasteDTO: GetPasteDTO,
     ): Promise<APIRes<GetPaste>> {
         return this.pasteService.getPaste(getPasteDTO);
+    }
+
+    @Get("report")
+    @UseGuards(AuthGuard)
+    public async reportPaste(
+        @Query() reportPasteDTO: ReportPasteDTO,
+        @User() user: IUser
+    ): Promise<APIRes<boolean>> {
+        return this.pasteService.reportPaste(reportPasteDTO, user);
     }
 
     @Get("fork")

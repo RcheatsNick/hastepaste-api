@@ -21,6 +21,7 @@ import { PasteEntity } from "@routers/paste/paste.entity";
 import { DeletePasteDTO } from "@routers/paste/dto/delete-paste.dto";
 import { ForkPasteDTO } from "./dto/fork-paste.dto";
 import { EditPasteDTO } from "./dto/edit-paste.dto";
+import { ReportPasteDTO } from "./dto/report-paste.dto";
 
 @Injectable()
 export class PasteService {
@@ -180,5 +181,16 @@ export class PasteService {
             message: "Paste edited successfully",
             data: true,
         };
+    }
+    public async reportPaste({ id }: ReportPasteDTO, user: IUser): Promise<APIRes<boolean>> {
+        const pasteData = await this.getPasteById(id);
+        if (pasteData.is_reported) throw new BadRequestException("This paste is already reported");
+        if (pasteData.owner_id === user.id) throw new BadRequestException("You can't report your paste");
+        await this.pasteRepository.updateOne({ id }, { $set: { is_reported: true }});
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Successfully reported",
+            data: true
+        }
     }
 }
