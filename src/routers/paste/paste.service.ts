@@ -171,7 +171,7 @@ export class PasteService {
         if (!paste && !title)
             throw new BadRequestException("paste or title required");
         const data = {
-            paste: paste || isExists.content,
+            content: paste || isExists.content,
             title: title || isExists.title,
             description: description || isExists.description,
         };
