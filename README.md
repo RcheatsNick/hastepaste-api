@@ -1,1 +1,2 @@
-# 📦 HastePaste App API Service
+# (DEPRECATED) 📦 HastePaste App API Service
+- We are now using supabase and github authentication
